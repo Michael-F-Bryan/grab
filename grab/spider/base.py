@@ -153,7 +153,7 @@ class Spider(DeprecatedThingsSpiderMixin):
         * thread-number - Number of concurrent network streams
         * network_try_limit - How many times try to send request
             again if network error was occurred, use 0 to disable
-        * network_try_limit - Limit of tries to execute some task
+        * task_try_limit - Limit of tries to execute some task
             this is not the same as network_try_limit
             network try limit limits the number of tries which
             are performed automatically in case of network timeout
@@ -167,11 +167,11 @@ class Spider(DeprecatedThingsSpiderMixin):
         * args - command line arguments parsed with `setup_arg_parser` method
         New options:
         * taskq=None,
-        * newtork_response_queue=None,
+        * network_response_queue=None,
         """
 
         if slave is not None:
-            raise SpiderConfigurtionError(
+            raise SpiderConfigurationError(
                 'Slave mode is not supported anymore. '
                 'Use `mp_mode=True` option to run multiple HTML'
                 ' parser processes.')
@@ -454,7 +454,7 @@ class Spider(DeprecatedThingsSpiderMixin):
         this method in your Spider class.
 
         This method is called only from Spider working in parser mode
-        that, in turn, is spawned automatically by main spider proces
+        that, in turn, is spawned automatically by main spider process
         working in multiprocess mode.
         """
 
@@ -612,7 +612,7 @@ class Spider(DeprecatedThingsSpiderMixin):
     def is_valid_network_response_code(self, code, task):
         """
         Answer the question: if the response could be handled via
-        usual task handler or the task faield and should be processed as error.
+        usual task handler or the task failed and should be processed as error.
         """
 
         return (code < 400 or code == 404 or
@@ -930,7 +930,7 @@ class Spider(DeprecatedThingsSpiderMixin):
         
         try:
             # Run custom things defined by this specific spider
-            # By defaut it does nothing
+            # By default it does nothing
             self.prepare()
 
             # Setup task queue if it has not been configured yet
@@ -941,7 +941,7 @@ class Spider(DeprecatedThingsSpiderMixin):
             with self.timer.log_time('task_generator'):
                 self.start_task_generators()
 
-            # Work in infinite cycle untill
+            # Work in infinite cycle until
             # `self.work_allowed` flag is True
             #shutdown_countdown = 0 # !!!
             pending_tasks = deque()
